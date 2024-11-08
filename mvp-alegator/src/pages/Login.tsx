@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../assets/alegator-logo-footer.png';
-import hojaAsset from '../assets/hoja-asset.png';
 
 const Login: React.FC = () => {
   return (
@@ -23,7 +22,7 @@ const Login: React.FC = () => {
           <button type="submit" className="w-full bg-green-500 text-white py-3 md:py-4 rounded-full hover:bg-green-600 transition-colors text-lg">INGRESAR</button>
         </form>
         <div className="mt-12 text-center text-white">
-          ¿No tienes una cuenta? <div><Link to="/register" className="text-yellow-400 hover:underline text-xl">REGÍSTRATE</Link></div>
+          ¿No tienes una cuenta? <div><Link to="/signup" className="text-yellow-400 hover:underline text-xl">REGÍSTRATE</Link></div>
         </div>
       </div>
     </div>
