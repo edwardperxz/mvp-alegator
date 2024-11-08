@@ -1,12 +1,16 @@
 import React from 'react';
-import Sidebar from './components/Sidebar';
-import SetPin from './pages/SetPin';
-import Header from './components/Header';
+import { Route, Routes } from 'react-router-dom';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
 
 const App: React.FC = () => {
   return (
-    <div className="flex h-screen">
-      <Sidebar />
+    <div className="min-h-screen bg-green-100 flex flex-col justify-center">
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/" element={<Login />} />
+      </Routes>
     </div>
   );
 };
