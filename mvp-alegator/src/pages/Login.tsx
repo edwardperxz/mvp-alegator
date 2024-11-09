@@ -19,7 +19,7 @@ const Login: React.FC = () => {
             <label htmlFor="password" className="sr-only">Contraseña</label>
             <input type="password" id="password" placeholder="Contraseña" className="w-full px-4 py-3 md:px-5 md:py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" />
           </div>
-          <button type="submit" className="w-full bg-green-500 text-white py-3 md:py-4 rounded-full hover:bg-green-600 transition-colors text-lg">INGRESAR</button>
+          <button type="submit" className="w-full bg-[#6B9026] text-white py-3 md:py-4 rounded-full hover:bg-green-600 transition-colors text-lg">INGRESAR</button>
         </form>
         <div className="mt-12 text-center text-white">
           ¿No tienes una cuenta? <div><Link to="/signup" className="text-yellow-400 hover:underline text-xl">REGÍSTRATE</Link></div>
