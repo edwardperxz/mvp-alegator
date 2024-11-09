@@ -11,17 +11,16 @@ const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 const schema = z.object({
-  name: z.string().min(2),
-  lastName: z.string().min(2),
-  userName: z.string().min(2),
-  email: z.string().email(),
-  password: z.string().min(8)
+  name: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
+  lastName: z.string().min(2, "El apellido debe tener al menos 2 caracteres"),
+  userName: z.string().min(2, "El nombre de usuario debe tener al menos 2 caracteres"),
+  email: z.string().email("Introduce un correo electrónico válido"),
+  password: z.string().min(8, "La contraseña debe tener al menos 8 caracteres")
 });
 
 type FormFields = z.infer<typeof schema>;
 
 const Signup: React.FC = () => {
-  const [isRegistered, setIsRegistered] = useState(false);
   const navigate = useNavigate();
 
   const {
@@ -64,7 +63,6 @@ const Signup: React.FC = () => {
           console.error("Error al insertar datos del usuario:", insertError.message);
         } else {
           console.log("Datos del usuario insertados correctamente!");
-          setIsRegistered(true);
           navigate('/confirmation');          
         }
       }
@@ -73,46 +71,29 @@ const Signup: React.FC = () => {
     }
   };
 
-  if (isRegistered) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-4 relative bg-green-100">
-        <div className="relative flex justify-center z-10">
-          <img src={logo} alt="Alegator" className="h-36 md:h-48 lg:h-60" />
-        </div>
-        <div className="text-center mt-6">
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-green-800 mb-6">¡TE HAS REGISTRADO CON ÉXITO!</h2>
-          <p className="text-lg md:text-xl lg:text-2xl text-green-700 mb-6">See You Later, Alegator.</p>
-          <Link to="/">
-            <button className="bg-[#6B9026] text-white py-3 md:py-4 px-6 rounded-full hover:bg-[#6B9026] transition-colors text-lg">VOLVER AL INICIO</button>
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 relative">
       <div className="relative flex justify-center z-10">
-        <img src={logo} alt="Alegator" className="h-36 md:h-48 lg:h-60 -mb-20 md:-mb-24 lg:-mb-24" />
+        <img src={logo} alt="Alegator" className="h-36 md:h-48 lg:h-60 -mb-16 md:-mb-20 lg:-mb-24" />
       </div>
       <div className="bg-[#11372A] p-8 md:p-12 lg:p-16 rounded-lg shadow-lg w-full max-w-md md:max-w-lg lg:max-w-2xl relative z-0">
         <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-6 md:mb-8 lg:mb-10 text-center">CREAR UNA CUENTA</h2>
         <form className="space-y-6 md:space-y-8" onSubmit={handleSubmit(onSubmit)}>
-          <div className="flex justify-between">
-            <div className="w-1/2 pr-2">
+          <div className="flex flex-wrap -mx-2">
+            <div className="w-full md:w-1/2 px-2 mb-4 md:mb-0">
               <label htmlFor="firstName" className="sr-only">Nombre</label>
               <input {...register("name")}
                 type="text" id="firstName" placeholder="Nombre" className="w-full px-4 py-3 md:px-5 md:py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" />
               {errors.name && (
-                <div className='text-red-500'>{errors.name.message}</div>
+                <div className='text-red-500 text-sm mt-1'>{errors.name.message}</div>
               )}
             </div>
-            <div className="w-1/2 pl-2">
+            <div className="w-full md:w-1/2 px-2">
               <label htmlFor="lastName" className="sr-only">Apellido</label>
               <input {...register("lastName")}
                 type="text" id="lastName" placeholder="Apellido" className="w-full px-4 py-3 md:px-5 md:py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" />
               {errors.lastName && (
-                <div className='text-red-500'>{errors.lastName.message}</div>
+                <div className='text-red-500 text-sm mt-1'>{errors.lastName.message}</div>
               )}
             </div>
           </div>
@@ -121,7 +102,7 @@ const Signup: React.FC = () => {
             <input {...register("userName")}
               type="text" id="username" placeholder="Nombre de Usuario" className="w-full px-4 py-3 md:px-5 md:py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" />
             {errors.userName && (
-              <div className='text-red-500'>{errors.userName.message}</div>
+              <div className='text-red-500 text-sm mt-1'>{errors.userName.message}</div>
             )}
           </div>
           <div>
@@ -129,7 +110,7 @@ const Signup: React.FC = () => {
             <input {...register("email")}
               type="email" id="email" placeholder="Correo" className="w-full px-4 py-3 md:px-5 md:py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" />
             {errors.email && (
-              <div className='text-red-500'>{errors.email.message}</div>
+              <div className='text-red-500 text-sm mt-1'>{errors.email.message}</div>
             )}
           </div>
           <div>
@@ -137,7 +118,7 @@ const Signup: React.FC = () => {
             <input {...register("password")}
               type="password" id="password" placeholder="Contraseña" className="w-full px-4 py-3 md:px-5 md:py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" />
             {errors.password && (
-              <div className='text-red-500'>{errors.password.message}</div>
+              <div className='text-red-500 text-sm mt-1'>{errors.password.message}</div>
             )}
           </div>
           <div>
