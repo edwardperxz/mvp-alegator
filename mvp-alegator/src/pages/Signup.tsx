@@ -148,7 +148,7 @@ const Signup: React.FC = () => {
             type="submit" className="w-full bg-[#6B9026] text-white py-3 md:py-4 rounded-full hover:bg-green-600 transition-colors text-lg">REGISTRARSE</button>
         </form>
         <div className="mt-6 text-center text-white">
-          ¿Ya tienes una cuenta? <Link to="/login" className="text-yellow-400 hover:underline">INICIAR SESIÓN</Link>
+          ¿Ya tienes una cuenta? <br/><Link to="/login" className="text-yellow-400 hover:underline">INICIAR SESIÓN</Link>
         </div>
       </div>
     </div>
