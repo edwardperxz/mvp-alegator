@@ -32,7 +32,7 @@ const Signup: React.FC = () => {
 
   const onSubmit = async (data: FormFields) => {
     try {
-      const { error } = await supabase.auth.signUp({
+      let { error } = await supabase.auth.signUp({
         email: data.email,
         password: data.password
       });
