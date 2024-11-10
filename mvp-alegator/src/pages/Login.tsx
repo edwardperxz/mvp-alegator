@@ -70,15 +70,15 @@ const Login: React.FC = () => {
         <form className="space-y-6 md:space-y-8" onSubmit={handleSubmit(onSubmit)}>
           <div>
             <label htmlFor="username" className="sr-only">Nombre de Usuario</label>
-            <input {...register("userName")} type="text" id="username" placeholder="Nombre de Usuario" className="w-full px-4 py-3 md:px-5 md:py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" />
+            <input {...register("userName")} type="text" id="username" placeholder="Nombre de Usuario" className="w-full px-4 py-3 md:px-5 md:py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-[#507A1B] " />
             {errors.userName && <div className="text-red-500">{errors.userName.message}</div>}
           </div>
           <div>
             <label htmlFor="password" className="sr-only">Contraseña</label>
-            <input {...register("password")} type="password" id="password" placeholder="Contraseña" className="w-full px-4 py-3 md:px-5 md:py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" />
+            <input {...register("password")} type="password" id="password" placeholder="Contraseña" className="w-full px-4 py-3 md:px-5 md:py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-[#507A1B] " />
             {errors.password && <div className="text-red-500">{errors.password.message}</div>}
           </div>
-          <button disabled={isSubmitting} type="submit" className="w-full bg-[#6B9026] text-white py-3 md:py-4 rounded-full hover:bg-green-600 transition-colors text-lg">INGRESAR</button>
+          <button disabled={isSubmitting} type="submit" className="w-full bg-[#6B9026] text-white py-3 md:py-4 rounded-full hover:bg-[#507A1B] transition-colors text-lg">INGRESAR</button>
         </form>
         <div className="mt-12 text-center text-white">
           ¿No tienes una cuenta? <div><Link to="/signup" className="text-yellow-400 hover:underline text-xl">REGÍSTRATE</Link></div>

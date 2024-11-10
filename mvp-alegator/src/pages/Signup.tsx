@@ -82,7 +82,7 @@ const Signup: React.FC = () => {
             <div className="w-full md:w-1/2 px-2 mb-4 md:mb-0">
               <label htmlFor="firstName" className="sr-only">Nombre</label>
               <input {...register("name")}
-                type="text" id="firstName" placeholder="Nombre" className="w-full px-4 py-3 md:px-5 md:py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" />
+                type="text" id="firstName" placeholder="Nombre" className="w-full px-4 py-3 md:px-5 md:py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-[#507A1B]" />
               {errors.name && (
                 <div className='text-red-500 text-sm mt-1'>{errors.name.message}</div>
               )}
@@ -90,7 +90,7 @@ const Signup: React.FC = () => {
             <div className="w-full md:w-1/2 px-2">
               <label htmlFor="lastName" className="sr-only">Apellido</label>
               <input {...register("lastName")}
-                type="text" id="lastName" placeholder="Apellido" className="w-full px-4 py-3 md:px-5 md:py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" />
+                type="text" id="lastName" placeholder="Apellido" className="w-full px-4 py-3 md:px-5 md:py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-[#507A1B] " />
               {errors.lastName && (
                 <div className='text-red-500 text-sm mt-1'>{errors.lastName.message}</div>
               )}
@@ -99,7 +99,7 @@ const Signup: React.FC = () => {
           <div>
             <label htmlFor="username" className="sr-only">Nombre de Usuario</label>
             <input {...register("userName")}
-              type="text" id="username" placeholder="Nombre de Usuario" className="w-full px-4 py-3 md:px-5 md:py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" />
+              type="text" id="username" placeholder="Nombre de Usuario" className="w-full px-4 py-3 md:px-5 md:py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-[#507A1B] " />
             {errors.userName && (
               <div className='text-red-500 text-sm mt-1'>{errors.userName.message}</div>
             )}
@@ -107,7 +107,7 @@ const Signup: React.FC = () => {
           <div>
             <label htmlFor="email" className="sr-only">Correo</label>
             <input {...register("email")}
-              type="email" id="email" placeholder="Correo" className="w-full px-4 py-3 md:px-5 md:py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" />
+              type="email" id="email" placeholder="Correo" className="w-full px-4 py-3 md:px-5 md:py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-[#507A1B] " />
             {errors.email && (
               <div className='text-red-500 text-sm mt-1'>{errors.email.message}</div>
             )}
@@ -115,17 +115,17 @@ const Signup: React.FC = () => {
           <div>
             <label htmlFor="password" className="sr-only">Contraseña</label>
             <input {...register("password")}
-              type="password" id="password" placeholder="Contraseña" className="w-full px-4 py-3 md:px-5 md:py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" />
+              type="password" id="password" placeholder="Contraseña" className="w-full px-4 py-3 md:px-5 md:py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-[#507A1B] " />
             {errors.password && (
               <div className='text-red-500 text-sm mt-1'>{errors.password.message}</div>
             )}
           </div>
           <div>
             <label htmlFor="confirmPassword" className="sr-only">Repetir Contraseña</label>
-            <input type="password" id="confirmPassword" placeholder="Repetir Contraseña" className="w-full px-4 py-3 md:px-5 md:py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" />
+            <input type="password" id="confirmPassword" placeholder="Repetir Contraseña" className="w-full px-4 py-3 md:px-5 md:py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-[#507A1B] " />
           </div>
           <button disabled={isSubmitting}
-            type="submit" className="w-full bg-[#6B9026] text-white py-3 md:py-4 rounded-full hover:bg-green-600 transition-colors text-lg">REGISTRARSE</button>
+            type="submit" className="w-full bg-[#6B9026] text-white py-3 md:py-4 rounded-full hover:bg-[#507A1B] transition-colors text-lg">REGISTRARSE</button>
         </form>
         <div className="mt-6 text-center text-white">
           ¿Ya tienes una cuenta? <br/><Link to="/login" className="text-yellow-400 hover:underline">INICIAR SESIÓN</Link>
