@@ -1,3 +1,4 @@
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/alegator-logo-footer.png';
 import { useForm } from 'react-hook-form';
@@ -21,6 +22,7 @@ type FormFields = z.infer<typeof schema>;
 
 const Signup: React.FC = () => {
   const navigate = useNavigate();
+  const [signUpError, setSignUpError] = React.useState<Error | null>(null);
 
   const {
     register,
@@ -39,6 +41,7 @@ const Signup: React.FC = () => {
       });
 
       if (signUpError) {
+        setSignUpError(signUpError);
         console.error("Error de registro:", signUpError.message);
       } else {
         console.log("Registro exitoso!");
@@ -124,6 +127,9 @@ const Signup: React.FC = () => {
             <label htmlFor="confirmPassword" className="sr-only">Repetir Contraseña</label>
             <input type="password" id="confirmPassword" placeholder="Repetir Contraseña" className="w-full px-4 py-3 md:px-5 md:py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-[#507A1B] " />
           </div>
+          {signUpError && (
+            <div className='text-red-500 text-sm mt-1'>{signUpError.message}</div>
+          )}
           <button disabled={isSubmitting}
             type="submit" className="w-full bg-[#6B9026] text-white py-3 md:py-4 rounded-full hover:bg-[#507A1B] transition-colors text-lg">REGISTRARSE</button>
         </form>
