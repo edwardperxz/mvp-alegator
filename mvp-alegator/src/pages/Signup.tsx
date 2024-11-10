@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/alegator-logo-footer.png';
 import { useForm } from 'react-hook-form';
