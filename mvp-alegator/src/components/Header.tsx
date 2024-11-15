@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import logoHeader from '../assets/alegator-logo-letras-blancas-fondo-transparente.png';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -9,9 +9,11 @@ import { supabase } from '../supabaseClient';
 
 const Header: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
+    /*
     const checkLoginStatus = async () => {
       const token = localStorage.getItem('token');
       if (token) {
@@ -27,6 +29,7 @@ const Header: React.FC = () => {
       }
     };
     checkLoginStatus();
+    */
   }, []);  
 
   const toggleSidebar = () => {
@@ -36,9 +39,10 @@ const Header: React.FC = () => {
   const handleLogout = async () => {
     try {
       await supabase.auth.signOut();
-      localStorage.removeItem('token'); 
+      // localStorage.removeItem('token'); 
       setIsLoggedIn(false);
       console.log('Sesión cerrada correctamente');
+      navigate('/login'); // Redirigir al usuario a la página de inicio de sesión
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
     }
@@ -55,19 +59,14 @@ const Header: React.FC = () => {
           <Link to="/tournaments" className="hover:text-gray-300">TORNEOS</Link>
           <Link to="/events" className="hover:text-gray-300">EVENTOS</Link>
         </nav>
-        {isLoggedIn ? (
-          <div className="flex items-center space-x-4">
-          <Link to="/profile" className="hidden md:block">
+        <div className="hidden md:flex items-center space-x-4">
+          <Link to="/profile">
             <AccountCircle className="cursor-pointer" style={{ fontSize: 30 }} />
           </Link>
-
-          <button onClick={handleLogout} className="md:block">
+          <button onClick={handleLogout}>
             <ExitToAppIcon style={{ fontSize: 30 }} className="cursor-pointer" />
           </button>
         </div>
-        ) : (
-          <Link to="/login" className="bg-[#6B9026] text-white py-2 px-4 rounded-full hover:bg-[#507A1B]">INICIAR SESIÓN</Link>
-        )}
         <button className="md:hidden" onClick={toggleSidebar}>
           <MenuIcon style={{ fontSize: 30 }} />
         </button>
@@ -88,21 +87,13 @@ const Header: React.FC = () => {
               <Link to="/events" className="hover:text-gray-300" onClick={toggleSidebar}>EVENTOS</Link>
             </nav>
           </div>
-          <div className="flex justify-between mb-4 w-full px-4">
-            {isLoggedIn ? (
-              <>
-                <Link to="/profile" className="bg-[#6B9026] text-white py-4 px-6 w-1/2 rounded-lg hover:bg-[#507A1B] flex items-center justify-center" onClick={toggleSidebar}>
-                  <AccountCircle style={{ fontSize: 40 }} className="mr-2" /> PERFIL 
-                </Link>
-                <button className="bg-[#6B9026] text-white py-4 px-6 w-1/2 rounded-lg hover:bg-[#507A1B] flex items-center justify-center ml-2" onClick={handleLogout}>
-                  CERRAR SESIÓN
-                </button>
-              </>
-            ) : (
-              <Link to="/login" className="bg-[#6B9026] text-white py-4 px-6 w-1/2 rounded-lg hover:bg-[#507A1B] flex items-center justify-center" onClick={toggleSidebar}>
-                INICIAR SESIÓN
-              </Link>
-            )}
+          <div className="flex justify-between w-full px-4 mb-4">
+            <Link to="/profile" className="bg-[#6B9026] text-white py-4 px-6 rounded-lg hover:bg-[#507A1B] flex items-center justify-center" onClick={toggleSidebar}>
+              <AccountCircle style={{ fontSize: 40 }} className="mr-2" /> PERFIL
+            </Link>
+            <button className="bg-[#6B9026] text-white py-4 px-6 rounded-lg hover:bg-[#507A1B] flex items-center justify-center ml-2" onClick={handleLogout}>
+              CERRAR SESIÓN
+            </button>
           </div>
         </div>
       </div>

@@ -10,6 +10,7 @@ const AdminHeader: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
+    /*
     const checkLoginStatus = async () => {
       const token = localStorage.getItem('token');
       if (token) {
@@ -21,6 +22,7 @@ const AdminHeader: React.FC = () => {
     };
 
     checkLoginStatus();
+    */
   }, []);
 
   const toggleSidebar = () => {
@@ -30,7 +32,7 @@ const AdminHeader: React.FC = () => {
   const handleLogout = async () => {
     try {
       await supabase.auth.signOut();
-      localStorage.clear();
+      // localStorage.clear();
       console.log('Sesión cerrada correctamente');
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
