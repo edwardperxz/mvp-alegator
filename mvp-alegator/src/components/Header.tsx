@@ -4,6 +4,7 @@ import logoHeader from '../assets/alegator-logo-letras-blancas-fondo-transparent
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { supabase } from '../supabaseClient';
 
 const Header: React.FC = () => {
@@ -35,7 +36,7 @@ const Header: React.FC = () => {
   const handleLogout = async () => {
     try {
       await supabase.auth.signOut();
-      localStorage.clear(); 
+      localStorage.removeItem('token'); 
       setIsLoggedIn(false);
       console.log('Sesión cerrada correctamente');
     } catch (error) {
@@ -55,7 +56,15 @@ const Header: React.FC = () => {
           <Link to="/events" className="hover:text-gray-300">EVENTOS</Link>
         </nav>
         {isLoggedIn ? (
-          <Link to="/profile" className="hidden md:block"><AccountCircle className="cursor-pointer" style={{ fontSize: 30 }} /></Link>
+          <div className="flex items-center space-x-4">
+          <Link to="/profile" className="hidden md:block">
+            <AccountCircle className="cursor-pointer" style={{ fontSize: 30 }} />
+          </Link>
+
+          <button onClick={handleLogout} className="md:block">
+            <ExitToAppIcon style={{ fontSize: 30 }} className="cursor-pointer" />
+          </button>
+        </div>
         ) : (
           <Link to="/login" className="bg-[#6B9026] text-white py-2 px-4 rounded-full hover:bg-[#507A1B]">INICIAR SESIÓN</Link>
         )}
@@ -83,7 +92,7 @@ const Header: React.FC = () => {
             {isLoggedIn ? (
               <>
                 <Link to="/profile" className="bg-[#6B9026] text-white py-4 px-6 w-1/2 rounded-lg hover:bg-[#507A1B] flex items-center justify-center" onClick={toggleSidebar}>
-                  <AccountCircle style={{ fontSize: 40 }} className="mr-2" /> PERFIL
+                  <AccountCircle style={{ fontSize: 40 }} className="mr-2" /> PERFIL 
                 </Link>
                 <button className="bg-[#6B9026] text-white py-4 px-6 w-1/2 rounded-lg hover:bg-[#507A1B] flex items-center justify-center ml-2" onClick={handleLogout}>
                   CERRAR SESIÓN

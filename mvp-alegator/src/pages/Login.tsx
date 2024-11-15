@@ -30,15 +30,13 @@ const Login: React.FC = () => {
       const token = localStorage.getItem('token');
       if (token) {
         const userResponse = await supabase.auth.getUser(token);
-        if (userResponse.data) {
+        if (userResponse?.data) {
           setIsLoggedIn(true);
         } else {
-          localStorage.clear();
+          localStorage.removeItem('token');
           setIsLoggedIn(false);
         }
-      } else {
-        setIsLoggedIn(false);
-      }
+      } 
     };
     checkLoginStatus();
   }, []);
@@ -72,6 +70,7 @@ const Login: React.FC = () => {
     } catch (error) {
       console.error("Error:", error);
     }
+
   };  
 
   return (
@@ -97,7 +96,6 @@ const Login: React.FC = () => {
         <div className="mt-12 text-center text-white">
           ¿No tienes una cuenta? <div><Link to="/signup" className="text-yellow-400 hover:underline text-xl">REGÍSTRATE</Link></div>
         </div>
-        {isLoggedIn && <div className="mt-4 text-green-500">Sesión iniciada</div>}
       </div>
     </div>
   );
