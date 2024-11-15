@@ -1,14 +1,10 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import logo from '../assets/alegator-logo-footer.png';
+import logo from '../assets/ivan-lentes-fondo-transparente.png';
 import { useForm } from 'react-hook-form';
 import { z } from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
+import { supabase } from '../supabaseClient';
 
 const schema = z.object({
   name: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
@@ -34,7 +30,6 @@ const Signup: React.FC = () => {
 
   const onSubmit = async (data: FormFields) => {
     try {
-      // Registro de usuario en Supabase Auth
       const { data: authData, error: signUpError } = await supabase.auth.signUp({
         email: data.email,
         password: data.password
@@ -45,8 +40,6 @@ const Signup: React.FC = () => {
         console.error("Error de registro:", signUpError.message);
       } else {
         console.log("Registro exitoso!");
-
-        // Inserción de datos adicionales en la tabla 'users'
         const { error: insertError } = await supabase.from('users').insert([
           {
             id: authData.user?.id,

@@ -1,15 +1,10 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import logo from '../assets/alegator-logo-footer.png';
-import { createClient } from '@supabase/supabase-js';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import logo from '../assets/ivan-lentes-fondo-transparente.png';
 import { useForm } from 'react-hook-form';
 import { z } from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
-
-
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
+import { supabase } from '../supabaseClient'; 
 
 const schema = z.object({
   userName: z.string().min(2, 'Usuario incorrecto'),
@@ -18,48 +13,67 @@ const schema = z.object({
 
 type FormFields = z.infer<typeof schema>;
 
-const Login: React.FC = () => {  
-    
-    const {
-      register,
-      handleSubmit,
-      formState: { errors, isSubmitting },
-    } = useForm<FormFields>({
-      resolver: zodResolver(schema)
-    });
-  
-    const onSubmit = async (data: FormFields) => {
-      try { //encontrar el correo del usuario
-        const { data:users , error: fetchError } = await supabase
-        .from('users')
-        .select('email')
-        .eq('username', data.userName)
-        .single();
+const Login: React.FC = () => {
+  const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-        if (fetchError || !users) {
-          console.error("Usuario no encontrado:", fetchError.message);
-          return;
-        }
-        
-        //autenticar usuario con el correo 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<FormFields>({
+    resolver: zodResolver(schema)
+  });
 
-        const { data: authData, error: loginError } = await supabase.auth.signInWithPassword({
-          email: users.email,
-          password: data.password
-        });
-
-        if (loginError) {
-          console.error("Error de inicio de sesión:", loginError.message);
-          
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        const userResponse = await supabase.auth.getUser(token);
+        if (userResponse.data) {
+          setIsLoggedIn(true);
         } else {
-          console.log("Inicio de sesión exitoso", authData);
-          
+          localStorage.clear();
+          setIsLoggedIn(false);
         }
-      } catch (error) {
-        console.error("Error:", error);
+      } else {
+        setIsLoggedIn(false);
       }
     };
-          
+    checkLoginStatus();
+  }, []);
+
+  const onSubmit = async (data: FormFields) => {
+    try {
+      console.log("Iniciando sesión con:", data.userName);
+      const { data: users, error: fetchError } = await supabase
+        .from('users')
+        .select('*')
+        .eq('username', data.userName)
+        .maybeSingle(); 
+      console.log("Resultado de la consulta:", users);
+      if (fetchError || !users) {
+        console.error("Usuario no encontrado:", fetchError?.message || 'No se encontró el usuario');
+        return;
+      }
+  
+      const { data: authData, error: loginError } = await supabase.auth.signInWithPassword({
+        email: users.email,
+        password: data.password
+      });
+      if (loginError) {
+        console.error("Error de inicio de sesión:", loginError.message);
+      } else {
+        console.log("Inicio de sesión exitoso", authData);
+        localStorage.setItem('token', authData.session.access_token);
+        setIsLoggedIn(true);
+        navigate('/home');
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };  
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 relative">
       <div className="relative flex justify-center z-10">
@@ -83,6 +97,7 @@ const Login: React.FC = () => {
         <div className="mt-12 text-center text-white">
           ¿No tienes una cuenta? <div><Link to="/signup" className="text-yellow-400 hover:underline text-xl">REGÍSTRATE</Link></div>
         </div>
+        {isLoggedIn && <div className="mt-4 text-green-500">Sesión iniciada</div>}
       </div>
     </div>
   );

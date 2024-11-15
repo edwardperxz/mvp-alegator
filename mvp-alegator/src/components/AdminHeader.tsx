@@ -6,27 +6,22 @@ import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import { supabase } from '../supabaseClient';
 
-const Header: React.FC = () => {
+const AdminHeader: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const checkLoginStatus = async () => {
       const token = localStorage.getItem('token');
       if (token) {
         const userResponse = await supabase.auth.getUser(token);
-        if (userResponse.data) {
-          setIsLoggedIn(true);
-        } else {
-          localStorage.clear(); 
-          setIsLoggedIn(false);
+        if (!userResponse.data) {
+          localStorage.clear();  
         }
-      } else {
-        setIsLoggedIn(false);
       }
     };
+
     checkLoginStatus();
-  }, []);  
+  }, []);
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -35,13 +30,12 @@ const Header: React.FC = () => {
   const handleLogout = async () => {
     try {
       await supabase.auth.signOut();
-      localStorage.clear(); 
-      setIsLoggedIn(false);
+      localStorage.clear();
       console.log('Sesión cerrada correctamente');
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
     }
-  };  
+  };
 
   return (
     <header className="bg-[#11372A] text-white p-4 fixed w-full top-0 left-0 z-50 flex items-center justify-between">
@@ -49,16 +43,17 @@ const Header: React.FC = () => {
         <img src={logoHeader} alt="Logo" className="h-full w-auto md:h-24" />
       </div>
       <div className="flex items-center space-x-4">
-        <nav className="hidden md:flex space-x-8 lg:space-x-16">
+        <nav className="hidden md:flex space-x-6 lg:space-x-10"> {/* Reducir espacio entre opciones */}
           <Link to="/" className="hover:text-gray-300">INICIO</Link>
-          <Link to="/tournaments" className="hover:text-gray-300">TORNEOS</Link>
-          <Link to="/events" className="hover:text-gray-300">EVENTOS</Link>
+          <Link to="/configure-tournament" className="hover:text-gray-300">CONFIGURAR TORNEO</Link>
+          <Link to="/register" className="hover:text-gray-300">REGISTRO</Link>
+          <Link to="/rounds" className="hover:text-gray-300">RONDAS</Link>
+          <Link to="/users" className="hover:text-gray-300">USUARIOS</Link>
+          <Link to="/feedback" className="hover:text-gray-300">FEEDBACK</Link>
+          <Link to="/staff" className="hover:text-gray-300">STAFF</Link>
+          <Link to="/incompatibility" className="hover:text-gray-300">INCOMPATIBILIDAD</Link>
         </nav>
-        {isLoggedIn ? (
-          <Link to="/profile" className="hidden md:block"><AccountCircle className="cursor-pointer" style={{ fontSize: 30 }} /></Link>
-        ) : (
-          <Link to="/login" className="bg-[#6B9026] text-white py-2 px-4 rounded-full hover:bg-[#507A1B]">INICIAR SESIÓN</Link>
-        )}
+        <Link to="/profile" className="hidden md:block"><AccountCircle className="cursor-pointer" style={{ fontSize: 30 }} /></Link>
         <button className="md:hidden" onClick={toggleSidebar}>
           <MenuIcon style={{ fontSize: 30 }} />
         </button>
@@ -73,27 +68,24 @@ const Header: React.FC = () => {
               <img src={logoHeader} alt="Logo" className="h-32 md:h-36 mb-4" />
               <hr className="w-full border-t border-white mb-8" />
             </div>
-            <nav className="flex flex-col items-center space-y-4">
+            <nav className="flex flex-col items-center space-y-8"> {/* Incrementa el espacio vertical */}
               <Link to="/" className="hover:text-gray-300" onClick={toggleSidebar}>INICIO</Link>
-              <Link to="/tournaments" className="hover:text-gray-300" onClick={toggleSidebar}>TORNEOS</Link>
-              <Link to="/events" className="hover:text-gray-300" onClick={toggleSidebar}>EVENTOS</Link>
+              <Link to="/configure-tournament" className="hover:text-gray-300" onClick={toggleSidebar}>CONFIGURAR TORNEO</Link>
+              <Link to="/register" className="hover:text-gray-300" onClick={toggleSidebar}>REGISTRO</Link>
+              <Link to="/rounds" className="hover:text-gray-300" onClick={toggleSidebar}>RONDAS</Link>
+              <Link to="/users" className="hover:text-gray-300" onClick={toggleSidebar}>USUARIOS</Link>
+              <Link to="/feedback" className="hover:text-gray-300" onClick={toggleSidebar}>FEEDBACK</Link>
+              <Link to="/staff" className="hover:text-gray-300" onClick={toggleSidebar}>STAFF</Link>
+              <Link to="/incompatibility" className="hover:text-gray-300" onClick={toggleSidebar}>INCOMPATIBILIDAD</Link>
             </nav>
           </div>
           <div className="flex justify-between mb-4 w-full px-4">
-            {isLoggedIn ? (
-              <>
-                <Link to="/profile" className="bg-[#6B9026] text-white py-4 px-6 w-1/2 rounded-lg hover:bg-[#507A1B] flex items-center justify-center" onClick={toggleSidebar}>
-                  <AccountCircle style={{ fontSize: 40 }} className="mr-2" /> PERFIL
-                </Link>
-                <button className="bg-[#6B9026] text-white py-4 px-6 w-1/2 rounded-lg hover:bg-[#507A1B] flex items-center justify-center ml-2" onClick={handleLogout}>
-                  CERRAR SESIÓN
-                </button>
-              </>
-            ) : (
-              <Link to="/login" className="bg-[#6B9026] text-white py-4 px-6 w-1/2 rounded-lg hover:bg-[#507A1B] flex items-center justify-center" onClick={toggleSidebar}>
-                INICIAR SESIÓN
-              </Link>
-            )}
+            <Link to="/profile" className="bg-[#6B9026] text-white py-4 px-6 w-1/2 rounded-lg hover:bg-[#507A1B] flex items-center justify-center" onClick={toggleSidebar}>
+              <AccountCircle style={{ fontSize: 40 }} className="mr-2" /> PERFIL
+            </Link>
+            <button className="bg-[#6B9026] text-white py-4 px-6 w-1/2 rounded-lg hover:bg-[#507A1B] flex items-center justify-center ml-2" onClick={handleLogout}>
+              CERRAR SESIÓN
+            </button>
           </div>
         </div>
       </div>
@@ -101,4 +93,4 @@ const Header: React.FC = () => {
   );
 };
 
-export default Header;
+export default AdminHeader;

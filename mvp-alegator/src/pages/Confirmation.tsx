@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import ivan from '../assets/ivan_alegator_confirmationPage.png';
+import ivan from '../assets/ivan-fondo-transparente.png';
 
 const Confirmation: React.FC = () => {
   return (

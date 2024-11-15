@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import logoFooter from '../assets/alegator-logo-footer.png'; 
+import logoFooter from '../assets/ivan-lentes-fondo-transparente.png'; 
 import { Instagram, Facebook, Twitter } from '@mui/icons-material'; 
 
 const Footer: React.FC = () => {
