@@ -1,4 +1,3 @@
-// src/pages/Signup.tsx
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/ivan-lentes-fondo-transparente.png';
@@ -43,13 +42,13 @@ const Signup: React.FC = () => {
         console.log("Registro exitoso!");
         const { error: insertError } = await supabase.from('users').insert([
           {
-            id: authData.user?.id, // ID generado automáticamente por Supabase
+            id: authData.user?.id, 
             username: data.userName,
             email: data.email,
             first_name: data.name,
             last_name: data.lastName,
             is_active: true,
-            password: data.password, // Insertar la contraseña en la tabla users
+            password: data.password,
             is_admin: false,
             created_at: new Date().toISOString(),
           }
@@ -59,7 +58,7 @@ const Signup: React.FC = () => {
           console.error("Error al insertar datos del usuario:", insertError.message);
         } else {
           console.log("Datos del usuario insertados correctamente!");
-          navigate('/confirmation', { state: { context: 'signup' } });  // Redirigir con el contexto 'signup'
+          navigate('/confirmation', { state: { context: 'signup' } });
         }
       }
     } catch (error) {
