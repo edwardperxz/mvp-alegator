@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import logoHeader from '../assets/alegator-logo-letras-blancas-fondo-transparente.png';
 import AccountCircle from '@mui/icons-material/AccountCircle';
@@ -9,22 +9,6 @@ import { supabase } from '../supabaseClient';
 const AdminHeader: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  useEffect(() => {
-    /*
-    const checkLoginStatus = async () => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        const userResponse = await supabase.auth.getUser(token);
-        if (!userResponse.data) {
-          localStorage.clear();  
-        }
-      }
-    };
-
-    checkLoginStatus();
-    */
-  }, []);
-
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
@@ -32,7 +16,6 @@ const AdminHeader: React.FC = () => {
   const handleLogout = async () => {
     try {
       await supabase.auth.signOut();
-      // localStorage.clear();
       console.log('Sesión cerrada correctamente');
     } catch (error) {
       console.error('Error al cerrar sesión:', error);

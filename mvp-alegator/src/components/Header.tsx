@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import logoHeader from '../assets/alegator-logo-letras-blancas-fondo-transparente.png';
 import AccountCircle from '@mui/icons-material/AccountCircle';
@@ -10,27 +10,6 @@ import { supabase } from '../supabaseClient';
 const Header: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    /*
-    const checkLoginStatus = async () => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        const userResponse = await supabase.auth.getUser(token);
-        if (userResponse.data) {
-          setIsLoggedIn(true);
-        } else {
-          localStorage.clear(); 
-          setIsLoggedIn(false);
-        }
-      } else {
-        setIsLoggedIn(false);
-      }
-    };
-    checkLoginStatus();
-    */
-  }, []);  
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -38,15 +17,20 @@ const Header: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-      await supabase.auth.signOut();
-      // localStorage.removeItem('token'); 
-      setIsLoggedIn(false);
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        throw error;
+      }
       console.log('Sesión cerrada correctamente');
-      navigate('/login'); // Redirigir al usuario a la página de inicio de sesión
+      navigate('/login');
     } catch (error) {
-      console.error('Error al cerrar sesión:', error);
+      if (error instanceof Error) {
+        console.error('Error al cerrar sesión:', error.message);
+      } else {
+        console.error('Error al cerrar sesión:', error);
+      }
     }
-  };  
+  };
 
   return (
     <header className="bg-[#11372A] text-white p-4 fixed w-full top-0 left-0 z-50 flex items-center justify-between">
@@ -55,7 +39,7 @@ const Header: React.FC = () => {
       </div>
       <div className="flex items-center space-x-4">
         <nav className="hidden md:flex space-x-8 lg:space-x-16">
-          <Link to="/" className="hover:text-gray-300">INICIO</Link>
+          <Link to="/home" className="hover:text-gray-300">INICIO</Link>
           <Link to="/tournaments" className="hover:text-gray-300">TORNEOS</Link>
           <Link to="/events" className="hover:text-gray-300">EVENTOS</Link>
         </nav>
@@ -82,7 +66,7 @@ const Header: React.FC = () => {
               <hr className="w-full border-t border-white mb-8" />
             </div>
             <nav className="flex flex-col items-center space-y-4">
-              <Link to="/" className="hover:text-gray-300" onClick={toggleSidebar}>INICIO</Link>
+              <Link to="/home" className="hover:text-gray-300" onClick={toggleSidebar}>INICIO</Link>
               <Link to="/tournaments" className="hover:text-gray-300" onClick={toggleSidebar}>TORNEOS</Link>
               <Link to="/events" className="hover:text-gray-300" onClick={toggleSidebar}>EVENTOS</Link>
             </nav>

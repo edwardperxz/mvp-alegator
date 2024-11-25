@@ -13,7 +13,7 @@ const ErrorPage: React.FC = () => {
         <h2 className="text-2xl font-bold text-white mb-4">Página no encontrada :(</h2>
         <p className="text-white mb-8">Lo sentimos, pero la página que estás buscando no existe. Puede que haya sido movida o eliminada.</p>
         <Link 
-          to="/" 
+          to="/home" 
           className="inline-block bg-green-700 text-white py-2 px-4 rounded-full hover:bg-green-800 transition-colors"
         >
           Volver a la página principal
