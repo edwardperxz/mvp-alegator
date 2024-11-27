@@ -1,18 +1,70 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import ivan from '../assets/ivan_alegator_confirmationPage.png';
+import { useLocation, Link } from 'react-router-dom';
+import ivan from '../assets/ivan-fondo-transparente.png';
 
 const Confirmation: React.FC = () => {
+  const location = useLocation();
+  const state = location.state as { context?: string } | undefined;
+
+  const getTitle = () => {
+    switch (state?.context) {
+      case 'createTournament':
+        return '¡TORNEO CREADO Y ACTIVADO CON ÉXITO!';
+      case 'subscribeTournament':
+        return '¡TE HAS INSCRITO AL TORNEO CON ÉXITO!';
+      case 'signup':
+      default:
+        return '¡TE HAS REGISTRADO CON ÉXITO!';
+    }
+  };
+
+  const getMessage = () => {
+    switch (state?.context) {
+      case 'createTournament':
+        return 'See You Later, Alegator.';
+      case 'subscribeTournament':
+        return 'See You Later, Alegator.';
+      case 'signup':
+      default:
+        return 'See You Later, Alegator.';
+    }
+  };
+
+  const getButtonText = () => {
+    switch (state?.context) {
+      case 'createTournament':
+        return 'VOLVER A TORNEOS';
+      case 'subscribeTournament':
+        return 'VER MIS TORNEOS';
+      case 'signup':
+      default:
+        return 'VOLVER AL INICIO';
+    }
+  };
+
+  const getLink = () => {
+    switch (state?.context) {
+      case 'createTournament':
+        return '/tournaments';
+      case 'subscribeTournament':
+        return '/tournaments';
+      case 'signup':
+      default:
+        return '/login';
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#ADBC9F] flex flex-col items-center justify-center p-4 relative overflow-hidden">
-      <div className="flex flex-col items-center justify-center text-center z-20 mt-10 lg:mt-20 space-y-4 lg:space-y-6 w-full max-w-md lg:max-w-xl">
-        <img src={ivan} alt="Alegator" className="w-40 md:w-52 lg:w-64 object-contain mb-4" />
-        <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#11372A] mb-4">¡TE HAS REGISTRADO CON ÉXITO!</h2>
-        <p className="text-lg md:text-xl lg:text-2xl text-[#1C1C1C] mb-6">See You Later, Alegator.</p>
-        <Link to="/login" className="bg-[#6B9026] text-white py-2 md:py-3 lg:py-4 px-4 md:px-6 lg:px-8 rounded-full hover:bg-[#507A1B] transition-colors text-base md:text-lg lg:text-xl">VOLVER AL INICIO</Link>
+      <div className="flex flex-col items-center justify-center text-center z-20 mt-8 lg:mt-12 space-y-3 lg:space-y-4 w-full max-w-sm lg:max-w-md">
+        <img src={ivan} alt="Alegator" className="w-32 md:w-40 lg:w-48 object-contain mb-3" />
+        <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-[#11372A] mb-3">{getTitle()}</h2>
+        <p className="text-md md:text-lg lg:text-xl text-[#1C1C1C] mb-4"><em>{getMessage()}</em></p>
+        <Link to={getLink()} className="bg-[#6B9026] text-white py-2 md:py-3 lg:py-3 px-3 md:px-5 lg:px-6 rounded-full hover:bg-[#507A1B] transition-colors text-sm md:text-md lg:text-lg">{getButtonText()}</Link>
       </div>
     </div>
   );
+  
 };
 
 export default Confirmation;

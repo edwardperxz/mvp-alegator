@@ -1,14 +1,10 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import logo from '../assets/alegator-logo-footer.png';
+import logo from '../assets/ivan-lentes-fondo-transparente.png';
 import { useForm } from 'react-hook-form';
 import { z } from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
+import { supabase } from '../supabaseClient';
 
 const schema = z.object({
   name: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
@@ -34,7 +30,6 @@ const Signup: React.FC = () => {
 
   const onSubmit = async (data: FormFields) => {
     try {
-      // Registro de usuario en Supabase Auth
       const { data: authData, error: signUpError } = await supabase.auth.signUp({
         email: data.email,
         password: data.password
@@ -45,11 +40,9 @@ const Signup: React.FC = () => {
         console.error("Error de registro:", signUpError.message);
       } else {
         console.log("Registro exitoso!");
-
-        // Inserción de datos adicionales en la tabla 'users'
         const { error: insertError } = await supabase.from('users').insert([
           {
-            id: authData.user?.id,
+            id: authData.user?.id, 
             username: data.userName,
             email: data.email,
             first_name: data.name,
@@ -65,11 +58,12 @@ const Signup: React.FC = () => {
           console.error("Error al insertar datos del usuario:", insertError.message);
         } else {
           console.log("Datos del usuario insertados correctamente!");
-          navigate('/confirmation');          
+          navigate('/confirmation', { state: { context: 'signup' } });
         }
       }
     } catch (error) {
       console.error('Error:', error);
+      setSignUpError(error instanceof Error ? error : new Error("Error desconocido"));
     }
   };
 
@@ -93,7 +87,7 @@ const Signup: React.FC = () => {
             <div className="w-full md:w-1/2 px-2">
               <label htmlFor="lastName" className="sr-only">Apellido</label>
               <input {...register("lastName")}
-                type="text" id="lastName" placeholder="Apellido" className="w-full px-4 py-3 md:px-5 md:py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-[#507A1B] " />
+                type="text" id="lastName" placeholder="Apellido" className="w-full px-4 py-3 md:px-5 md:py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-[#507A1B]" />
               {errors.lastName && (
                 <div className='text-red-500 text-sm mt-1'>{errors.lastName.message}</div>
               )}
@@ -102,7 +96,7 @@ const Signup: React.FC = () => {
           <div>
             <label htmlFor="username" className="sr-only">Nombre de Usuario</label>
             <input {...register("userName")}
-              type="text" id="username" placeholder="Nombre de Usuario" className="w-full px-4 py-3 md:px-5 md:py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-[#507A1B] " />
+              type="text" id="username" placeholder="Nombre de Usuario" className="w-full px-4 py-3 md:px-5 md:py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-[#507A1B]" />
             {errors.userName && (
               <div className='text-red-500 text-sm mt-1'>{errors.userName.message}</div>
             )}
@@ -110,7 +104,7 @@ const Signup: React.FC = () => {
           <div>
             <label htmlFor="email" className="sr-only">Correo</label>
             <input {...register("email")}
-              type="email" id="email" placeholder="Correo" className="w-full px-4 py-3 md:px-5 md:py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-[#507A1B] " />
+              type="email" id="email" placeholder="Correo" className="w-full px-4 py-3 md:px-5 md:py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-[#507A1B]" />
             {errors.email && (
               <div className='text-red-500 text-sm mt-1'>{errors.email.message}</div>
             )}
@@ -118,14 +112,14 @@ const Signup: React.FC = () => {
           <div>
             <label htmlFor="password" className="sr-only">Contraseña</label>
             <input {...register("password")}
-              type="password" id="password" placeholder="Contraseña" className="w-full px-4 py-3 md:px-5 md:py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-[#507A1B] " />
+              type="password" id="password" placeholder="Contraseña" className="w-full px-4 py-3 md:px-5 md:py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-[#507A1B]" />
             {errors.password && (
               <div className='text-red-500 text-sm mt-1'>{errors.password.message}</div>
             )}
           </div>
           <div>
             <label htmlFor="confirmPassword" className="sr-only">Repetir Contraseña</label>
-            <input type="password" id="confirmPassword" placeholder="Repetir Contraseña" className="w-full px-4 py-3 md:px-5 md:py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-[#507A1B] " />
+            <input type="password" id="confirmPassword" placeholder="Repetir Contraseña" className="w-full px-4 py-3 md:px-5 md:py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-[#507A1B]" />
           </div>
           {signUpError && (
             <div className='text-red-500 text-sm mt-1'>{signUpError.message}</div>
