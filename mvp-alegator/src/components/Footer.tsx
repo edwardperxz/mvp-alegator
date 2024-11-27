@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import logoFooter from '../assets/alegator-logo-footer.png'; 
+import logoFooter from '../assets/ivan-lentes-fondo-transparente.png'; 
 import { Instagram, Facebook, Twitter } from '@mui/icons-material'; 
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-[#11372A] text-white p-6 mt-auto flex-shrink-0 relative">
+    <footer className="bg-[#11372A] text-white p-6 flex-shrink-0 relative mt-32">
       <div className="container mx-auto flex flex-col items-center">
         <div className="relative w-full flex justify-center">
           <img src={logoFooter} alt="Alegator" className="h-36 mb-4 absolute -top-28" />
@@ -14,8 +14,8 @@ const Footer: React.FC = () => {
           <div>
             <h2 className="text-lg font-bold mb-4">ENLACES RÁPIDOS</h2>
             <ul>
-              <li><Link to="/" className="hover:text-gray-300">Inicio</Link></li>
-              <li><Link to="/my-tournaments" className="hover:text-gray-300">Mis Torneos</Link></li>
+              <li><Link to="/home" className="hover:text-gray-300">Inicio</Link></li>
+              <li><Link to="/tournaments" className="hover:text-gray-300">Mis Torneos</Link></li>
               <li><Link to="/events" className="hover:text-gray-300">Eventos</Link></li>
             </ul>
           </div>
