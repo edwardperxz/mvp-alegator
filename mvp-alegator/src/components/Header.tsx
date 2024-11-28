@@ -35,11 +35,13 @@ const Header: React.FC = () => {
   return (
     <header className="bg-[#11372A] text-white p-4 fixed w-full top-0 left-0 z-50 flex items-center justify-between">
       <div className="flex items-center h-16">
-        <img src={logoHeader} alt="Logo" className="h-full w-auto md:h-24" />
+        <Link to="/">
+          <img src={logoHeader} alt="Logo" className="w-auto h-24" />
+        </Link>
       </div>
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center space-x-12">
         <nav className="hidden md:flex space-x-8 lg:space-x-16">
-          <Link to="/home" className="hover:text-gray-300">INICIO</Link>
+          <Link to="/" className="hover:text-gray-300">INICIO</Link>
           <Link to="/tournaments" className="hover:text-gray-300">TORNEOS</Link>
           <Link to="/events" className="hover:text-gray-300">EVENTOS</Link>
         </nav>
