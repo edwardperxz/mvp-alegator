@@ -32,7 +32,7 @@ const Login: React.FC = () => {
       const { data: users, error: fetchError } = await supabase
         .from('users')
         .select('*')
-        .eq('username', data.userName.toLowerCase());
+        .eq('username', data.userName);
 
       if (fetchError) {
         console.error("Error al buscar usuario:", fetchError.message);
