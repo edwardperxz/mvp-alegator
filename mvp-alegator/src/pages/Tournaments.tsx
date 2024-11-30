@@ -7,6 +7,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { UserDashboard } from '../types/Users';
 import useUsers from '../hooks/useUsers';
 import { supabase } from '../supabaseClient';
+import { Link } from 'react-router-dom';
 
 interface tournaments {
   id: string;
@@ -150,10 +151,12 @@ const Tournaments: React.FC = () => {
                     onClick={handleSubscribeTournament}
                   >
                     Registrar Equipo o Juez
-                  </button>
-                  <button className="text-[#11372A] underline py-1 hover:text-green-700 transition-colors mt-2">
-                    Vista de Administrador
-                  </button>
+                    </button>
+                    <Link to={`/admin-view/${tournament.id}`}>
+                    <button className="text-[#11372A] underline py-1 hover:text-green-700 transition-colors mt-2">
+                        Vista de Administrador
+                      </button>
+                    </Link>
                 </div>
               </div>
               ))

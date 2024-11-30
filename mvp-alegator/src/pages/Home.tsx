@@ -6,18 +6,33 @@ import Footer from '../components/Footer';
 import { UserDashboard } from '../types/Users';
 import useUsers from '../hooks/useUsers';
 import { useNavigate } from 'react-router-dom';
+import LoadingModal from '../components/LoadingModal';
 
 const Home: React.FC = () => {
   const [user, setUser] = useState<UserDashboard>();
   const { fetchUsernameAndShortId } = useUsers();
   const navigate = useNavigate();
+  const [loadingModal, setLoadingModal] = useState<boolean>(false);
+
 
   useEffect(() => {
     const fetchUser = async () => {
-      const userId = (await supabase.auth.getUser()).data?.user?.id;
-      if (userId) {
-        const userData: UserDashboard = await fetchUsernameAndShortId(userId);
-        setUser(userData);
+      setLoadingModal(true);
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user?.id) {
+          throw new Error('No se pudo obtener el ID del usuario');
+        }
+        const userId = (await supabase.auth.getUser()).data?.user?.id;
+        if (userId) {
+          const userData: UserDashboard = await fetchUsernameAndShortId(userId);
+          setUser(userData);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+
+      } finally {
+        setLoadingModal(false);
       }
     };
 
@@ -49,6 +64,7 @@ const Home: React.FC = () => {
           </div>
         </div>
       </div>
+      {loadingModal && <LoadingModal />}
       <Footer />
     </>
   );
