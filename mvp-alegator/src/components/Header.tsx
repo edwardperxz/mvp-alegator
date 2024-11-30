@@ -1,15 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import logoHeader from '../assets/alegator-logo-letras-blancas-fondo-transparente.png';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import LoginIcon from '@mui/icons-material/Login';
 import { supabase } from '../supabaseClient';
 
 const Header: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const user = (await supabase.auth.getUser()).data?.user;
+      setIsAuthenticated(!!user);
+    };
+
+    checkUser();
+  }, []);
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -32,6 +43,14 @@ const Header: React.FC = () => {
     }
   };
 
+  const handleTournamentsClick = () => {
+    if (isAuthenticated) {
+      navigate('/tournaments');
+    } else {
+      navigate('/login');
+    }
+  };
+
   return (
     <header className="bg-[#11372A] text-white p-4 fixed w-full top-0 left-0 z-50 flex items-center justify-between">
       <div className="flex items-center h-16">
@@ -42,16 +61,24 @@ const Header: React.FC = () => {
       <div className="flex items-center space-x-12">
         <nav className="hidden md:flex space-x-8 lg:space-x-16">
           <Link to="/" className="hover:text-gray-300">INICIO</Link>
-          <Link to="/tournaments" className="hover:text-gray-300">TORNEOS</Link>
+          <button onClick={handleTournamentsClick} className="hover:text-gray-300">TORNEOS</button>
           <Link to="/events" className="hover:text-gray-300">EVENTOS</Link>
         </nav>
         <div className="hidden md:flex items-center space-x-4">
-          <Link to="/profile">
-            <AccountCircle className="cursor-pointer" style={{ fontSize: 30 }} />
-          </Link>
-          <button onClick={handleLogout}>
-            <ExitToAppIcon style={{ fontSize: 30 }} className="cursor-pointer" />
-          </button>
+          {isAuthenticated ? (
+            <>
+              <Link to="/profile">
+                <AccountCircle className="cursor-pointer" style={{ fontSize: 30 }} />
+              </Link>
+              <button onClick={handleLogout}>
+                <ExitToAppIcon style={{ fontSize: 30 }} className="cursor-pointer" />
+              </button>
+            </>
+          ) : (
+            <Link to="/login" className="hover:text-gray-300">
+              <LoginIcon style={{ fontSize: 30 }} />
+            </Link>
+          )}
         </div>
         <button className="md:hidden" onClick={toggleSidebar}>
           <MenuIcon style={{ fontSize: 30 }} />
@@ -69,17 +96,25 @@ const Header: React.FC = () => {
             </div>
             <nav className="flex flex-col items-center space-y-4">
               <Link to="/home" className="hover:text-gray-300" onClick={toggleSidebar}>INICIO</Link>
-              <Link to="/tournaments" className="hover:text-gray-300" onClick={toggleSidebar}>TORNEOS</Link>
+              <button onClick={() => { handleTournamentsClick(); toggleSidebar(); }} className="hover:text-gray-300">TORNEOS</button>
               <Link to="/events" className="hover:text-gray-300" onClick={toggleSidebar}>EVENTOS</Link>
             </nav>
           </div>
           <div className="flex justify-between w-full px-4 mb-4">
-            <Link to="/profile" className="bg-[#6B9026] text-white py-4 px-6 rounded-lg hover:bg-[#507A1B] flex items-center justify-center" onClick={toggleSidebar}>
-              <AccountCircle style={{ fontSize: 40 }} className="mr-2" /> PERFIL
-            </Link>
-            <button className="bg-[#6B9026] text-white py-4 px-6 rounded-lg hover:bg-[#507A1B] flex items-center justify-center ml-2" onClick={handleLogout}>
-              CERRAR SESIÓN
-            </button>
+            {isAuthenticated ? (
+              <>
+                <Link to="/profile" className="bg-[#6B9026] text-white py-4 px-6 rounded-lg hover:bg-[#507A1B] flex items-center justify-center" onClick={toggleSidebar}>
+                  <AccountCircle style={{ fontSize: 40 }} className="mr-2" /> PERFIL
+                </Link>
+                <button className="bg-[#6B9026] text-white py-4 px-6 rounded-lg hover:bg-[#507A1B] flex items-center justify-center ml-2" onClick={handleLogout}>
+                  CERRAR SESIÓN
+                </button>
+              </>
+            ) : (
+              <Link to="/login" className="bg-[#6B9026] text-white py-4 px-6 rounded-lg hover:bg-[#507A1B] flex items-center justify-center" onClick={toggleSidebar}>
+                <LoginIcon style={{ fontSize: 40 }} />
+              </Link>
+            )}
           </div>
         </div>
       </div>

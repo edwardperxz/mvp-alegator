@@ -1,6 +1,5 @@
 import { supabase } from '../supabaseClient';
-import type { UserData, UserDashboard } from '../types/Users';
-
+import { UserDashboard, UserData } from '../types/Users';
 
 export default () => {
     return {
@@ -41,11 +40,11 @@ async function fetchAllUsers(): Promise<UserData[]> {
     return data as UserData[];
 }
 
-async function fetchUserbyShortId(shortId: string): Promise<UserData> {
+async function fetchUserbyShortId(userId: string): Promise<UserData> {
     const { data, error } = await supabase
         .from('users')
         .select('*')
-        .eq('short_id', shortId)
+        .eq('id', userId)
         .single();
 
     if (error) {

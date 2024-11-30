@@ -11,7 +11,8 @@ const schema = z.object({
   lastName: z.string().min(2, "El apellido debe tener al menos 2 caracteres"),
   userName: z.string().min(2, "El nombre de usuario debe tener al menos 2 caracteres"),
   email: z.string().email("Introduce un correo electrónico válido"),
-  password: z.string().min(8, "La contraseña debe tener al menos 8 caracteres")
+  password: z.string().min(8, "La contraseña debe tener al menos 8 caracteres"),
+  country: z.string().nonempty("El país es obligatorio"),
 });
 
 type FormFields = z.infer<typeof schema>;
@@ -27,6 +28,39 @@ const Signup: React.FC = () => {
   } = useForm<FormFields>({
     resolver: zodResolver(schema)
   });
+
+  const countries: string[] = [
+    "AFGANISTAN", "ALBANIA", "ALEMANIA", "ANDORRA", "ANGOLA", "ANTIGUA Y BARBUDA", 
+    "ARABIA SAUDITA", "ARGELIA", "ARGENTINA", "ARMENIA", "AUSTRALIA", "AUSTRIA", 
+    "AZERBAIYAN", "BAHAMAS", "BAHREIN", "BANGLADES", "BARBADOS", "BELARUS", 
+    "BELGICA", "BELICE", "BENIN", "BHUTAN", "BOLIVIA", "BOSNIA Y HERZEGOVINA", 
+    "BOTSUANA", "BRASIL", "BRUNEI", "BULGARIA", "BURKINA FASO", "BURUNDI", 
+    "CABO VERDE", "CAMBOYA", "CAMERUN", "CANADA", "CATAR", "CHAD", "CHILE", "CHINA", 
+    "CHIPRE", "COLOMBIA", "COMORAS", "COREA DEL NORTE", "COREA DEL SUR", "COSTA DE MARFIL", 
+    "COSTA RICA", "CROACIA", "CUBA", "DINAMARCA", "DOMINICA", "ECUADOR", "EGIPTO", 
+    "EL SALVADOR", "EMIRATOS ARABES UNIDOS", "ERITREA", "ESLOVAQUIA", "ESLOVENIA", 
+    "ESPAÑA", "ESTADOS UNIDOS", "ESTONIA", "ESWATINI", "ETIOPIA", "FILIPINAS", 
+    "FINLANDIA", "FIYI", "FRANCIA", "GABON", "GAMBIA", "GEORGIA", "GHANA", "GRANADA", 
+    "GRECIA", "GUATEMALA", "GUINEA", "GUINEA BISSAU", "GUINEA ECUATORIAL", "GUYANA", 
+    "HAITI", "HONDURAS", "HUNGRIA", "INDIA", "INDONESIA", "IRAK", "IRAN", "IRLANDA", 
+    "ISLANDIA", "ISLAS MARSHALL", "ISLAS SALOMON", "ISRAEL", "ITALIA", "JAMAICA", 
+    "JAPON", "JORDANIA", "KAZAJISTAN", "KENIA", "KIRGUISTAN", "KIRIBATI", "KOSOVO", 
+    "KUWAIT", "LAOS", "LESOTO", "LETONIA", "LIBANO", "LIBERIA", "LIBIA", "LIECHTENSTEIN", 
+    "LITUANIA", "LUXEMBURGO", "MADAGASCAR", "MALASIA", "MALAWI", "MALDIVAS", "MALI", 
+    "MALTA", "MARRUECOS", "MAURICIO", "MAURITANIA", "MEXICO", "MICRONESIA", "MOLDAVIA", 
+    "MONACO", "MONGOLIA", "MONTENEGRO", "MOZAMBIQUE", "MYANMAR", "NAMIBIA", "NAURU", 
+    "NEPAL", "NICARAGUA", "NIGER", "NIGERIA", "NORUEGA", "NUEVA ZELANDA", "OMAN", 
+    "PAISES BAJOS", "PAKISTAN", "PALAU", "PALESTINA", "PANAMA", "PAPUA NUEVA GUINEA", 
+    "PARAGUAY", "PERU", "POLONIA", "PORTUGAL", "REINO UNIDO", "REPUBLICA CENTROAFRICANA", 
+    "REPUBLICA CHECA", "REPUBLICA DEL CONGO", "REPUBLICA DEMOCRATICA DEL CONGO", 
+    "REPUBLICA DOMINICANA", "RUANDA", "RUMANIA", "RUSIA", "SAMOA", "SAN CRISTOBAL Y NIEVES", 
+    "SAN MARINO", "SAN VICENTE Y LAS GRANADINAS", "SANTA LUCIA", "SANTO TOME Y PRINCIPE", 
+    "SENEGAL", "SERBIA", "SEYCHELLES", "SIERRA LEONA", "SINGAPUR", "SIRIA", "SOMALIA", 
+    "SRI LANKA", "SUAZILANDIA", "SUDAN", "SUDAN DEL SUR", "SUECIA", "SUIZA", "SURINAM", 
+    "TAILANDIA", "TANZANIA", "TAYIKISTAN", "TIMOR ORIENTAL", "TOGO", "TONGA", "TRINIDAD Y TOBAGO", 
+    "TUNEZ", "TURKMENISTAN", "TURQUIA", "TUVALU", "UCRANIA", "UGANDA", "URUGUAY", "UZBEKISTAN", 
+    "VANUATU", "VATICANO", "VENEZUELA", "VIETNAM", "YEMEN", "YIBUTI", "ZAMBIA", "ZIMBABUE"
+];
 
   const onSubmit = async (data: FormFields) => {
     try {
@@ -50,6 +84,7 @@ const Signup: React.FC = () => {
             is_active: true,
             password: data.password,
             is_admin: false,
+            country: data.country,
             created_at: new Date().toISOString(),
           }
         ]);
@@ -115,6 +150,22 @@ const Signup: React.FC = () => {
               type="password" id="password" placeholder="Contraseña" className="w-full px-4 py-3 md:px-5 md:py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-[#507A1B]" />
             {errors.password && (
               <div className='text-red-500 text-sm mt-1'>{errors.password.message}</div>
+            )}
+          </div>
+          <div>
+            <label htmlFor="country" className="sr-only">País</label>
+            <select
+              id="country"
+              {...register("country")}
+              className="w-full px-4 py-3 md:px-5 md:py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-[#507A1B]"
+            >
+              <option value="">Selecciona tu país</option>
+              {countries.map((country, index) => (
+                <option key={index} value={country}>{country}</option>
+              ))}
+            </select>
+            {errors.country && (
+              <div className='text-red-500 text-sm mt-1'>{errors.country.message}</div>
             )}
           </div>
           <div>
