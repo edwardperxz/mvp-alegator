@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import LoadingModal from '../components/LoadingModal';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { UserDashboard } from '../types/Users';
 import useUsers from '../hooks/useUsers';
@@ -33,7 +34,8 @@ const Tournaments: React.FC = () => {
   const [user, setUser] = useState<UserDashboard>();
   const { fetchUsernameAndShortId } = useUsers();
   const [tournaments, setTournaments] = useState<tournaments[]>([]);
-  
+  const [loadingModal, setLoadingModal] = useState<boolean>(false);
+
   const handleCreateTournament = () => {
     navigate('/create-tournament');
   };
@@ -64,43 +66,38 @@ const Tournaments: React.FC = () => {
   };
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const userId = (await supabase.auth.getUser()).data?.user?.id;
-      if (userId) {
-        const userData: UserDashboard = await fetchUsernameAndShortId(userId);
+    const fetchData = async () => {
+      setLoadingModal(true);
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user?.id) {
+          throw new Error('No se pudo obtener el ID del usuario');
+        }
+
+        const [userData, tournamentsData] = await Promise.all([
+          fetchUsernameAndShortId(user.id),
+          supabase
+            .from('tournaments')
+            .select('*')
+            .eq('creator', user.id)
+        ]);
+
+        if (tournamentsData.error) {
+          throw tournamentsData.error;
+        }
+
         setUser(userData);
+        setTournaments(tournamentsData.data || []);
+
+      } catch (error) {
+        console.error('Error fetching data:', error);
+
+      } finally {
+        setLoadingModal(false);
       }
     };
 
-    fetchUser();
-  }, []);
-
-  useEffect(() => {
-    const fetchTournaments = async () => {
-      try {
-        const userId = (await supabase.auth.getUser()).data?.user?.id;
-        console.log("usuario id: "+userId)
-        if (!userId) {
-          console.error('No se pudo obtener el ID del usuario');
-          return;
-        }
-
-        const { data, error } = await supabase
-          .from('tournaments') 
-          .select('*') 
-          .eq('creator', userId); 
-
-        if (error) {
-          throw error;
-        }
-
-        setTournaments(data || []);
-      } catch (error) {
-        console.error('Error al obtener torneos:', error);
-      } 
-    };
-
-    fetchTournaments();
+    fetchData();
   }, []);
 
   return (
@@ -167,6 +164,7 @@ const Tournaments: React.FC = () => {
 
           </div>
         </div>
+        {loadingModal && <LoadingModal />}
         <Footer />
       </div>
     </>
