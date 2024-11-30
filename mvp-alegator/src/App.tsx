@@ -10,6 +10,9 @@ import CreateTournament from './pages/CreateTournament';
 import SubscribeTournament from './pages/SubscribeTournaments'; 
 import RegisterJudge from './pages/RegisterJudge';
 import RegisterDebatient from './pages/RegisterDebatient';
+import Events from './pages/Events';
+import Profile from './pages/Profile';
+import EditProfile from './pages/EditProfile';
 
 const App: React.FC = () => {
   const isAuthenticated = true;
@@ -22,12 +25,15 @@ const App: React.FC = () => {
         <Route path="/confirmation" element={<Confirmation />} />
         {isAuthenticated ? (
           <>
-            <Route path="/tournaments" element={<Tournaments />} />
             <Route path="/home" element={<Home />} />
+            <Route path="/tournaments" element={<Tournaments />} />
             <Route path="/create-tournament" element={<CreateTournament />} /> 
             <Route path="/subscribe-tournament" element={<SubscribeTournament />} /> 
             <Route path="/subscribe-tournament/judge" element={<RegisterJudge/>} /> 
             <Route path="/subscribe-tournament/debatient" element={<RegisterDebatient />} /> 
+            <Route path="/events" element={<Events />} /> 
+            <Route path="/profile" element={<Profile />} /> 
+            <Route path="/edit-profile" element={<EditProfile />} /> 
             <Route path="/" element={<Home />} />
           </>
         ) : (
