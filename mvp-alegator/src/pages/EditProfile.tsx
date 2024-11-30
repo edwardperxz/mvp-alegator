@@ -51,7 +51,6 @@ const EditProfile: React.FC = () => {
 
   const onSubmitUsername = async (data: UsernameFormFields) => {
     try {
-      // Update username
       const updates: any = {
         username: data.username,
       };

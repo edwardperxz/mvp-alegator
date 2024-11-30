@@ -1,10 +1,49 @@
 import React, { useState } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+const schema = z.object({
+  teamName: z.string().min(2, "El nombre del equipo debe tener al menos 2 caracteres"),
+  institution: z.string().optional(),
+  debater1Name: z.string().min(2, "El nombre del debatiente 1 debe tener al menos 2 caracteres"),
+  debater1Email: z.string().email("Introduce un correo electrónico válido"),
+  debater1Province: z.string().nonempty("La provincia es obligatoria"),
+  debater1Pronouns: z.string().optional(),
+  debater2Name: z.string().min(2, "El nombre del debatiente 2 debe tener al menos 2 caracteres"),
+  debater2Email: z.string().email("Introduce un correo electrónico válido"),
+  debater2Province: z.string().nonempty("La provincia es obligatoria"),
+  debater2Pronouns: z.string().optional(),
+});
+
+type FormFields = z.infer<typeof schema>;
 
 const RegisterDebatient: React.FC = () => {
   const [step, setStep] = useState(1);
   const [teamType, setTeamType] = useState('');
+  const navigate = useNavigate();
+  const { register, handleSubmit, formState: { errors } } = useForm<FormFields>({
+    resolver: zodResolver(schema)
+  });
+
+  const provinces: string[] = [
+    "BOCAS DEL TORO",
+    "CHIRIQUI",
+    "COCLE",
+    "COLON",
+    "DARIEN",
+    "HERRERA",
+    "LOS SANTOS",
+    "PANAMA",
+    "PANAMA OESTE",
+    "VERAGUAS",
+    "COMARCA GUNA YALA",
+    "COMARCA NGABE-BUGLE",
+    "COMARCA EMBERA-WOUNAAN"
+  ];
 
   const handleNextStep = () => {
     setStep(step + 1);
@@ -19,13 +58,17 @@ const RegisterDebatient: React.FC = () => {
     handleNextStep();
   };
 
+  const handleConfirm = (data: FormFields) => {
+    console.log(data);
+    navigate('/confirmation', { state: { context: 'subscribeTournament', formData: data } });
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
       <div className="flex-grow flex flex-col items-center justify-center p-4 bg-[#ADBC9F] mt-32">
         <h1 className="text-2xl md:text-3xl font-bold mb-4 text-[#11372A]">REGISTRO - DEBATIENTE</h1>
 
-        {/* Indicador de Progreso */}
         <div className="flex items-center justify-center mb-8 w-full max-w-lg md:max-w-2xl lg:max-w-3xl">
           <div className={`flex items-center justify-center w-10 h-10 rounded-full ${step >= 1 ? 'bg-yellow-400' : 'bg-green-800'} text-white`}>1</div>
           <div className={`flex-grow h-1 ${step >= 2 ? 'bg-yellow-400' : 'bg-green-800'}`}></div>
@@ -67,50 +110,68 @@ const RegisterDebatient: React.FC = () => {
         {step === 2 && (
           <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-lg md:max-w-2xl lg:max-w-3xl">
             <h2 className="text-xl md:text-2xl font-bold mb-6 text-center text-[#11372A]">REGISTRO DE DATOS</h2>
-            <form>
+            <form onSubmit={handleSubmit(handleNextStep)}>
               <div className="mb-6">
                 <label className="block text-gray-700 text-base mb-2">NOMBRE DE EQUIPO</label>
-                <input type="text" className="w-full px-4 py-2 border rounded-lg text-base" required />
+                <input {...register("teamName")} type="text" className="w-full px-4 py-2 border rounded-lg text-base" />
+                {errors.teamName && <div className="text-red-500 text-sm mt-1">{errors.teamName.message}</div>}
               </div>
               {teamType === 'Institucional' && (
                 <div className="mb-6">
                   <label className="block text-gray-700 text-base mb-2">INSTITUCIÓN</label>
-                  <input type="text" className="w-full px-4 py-2 border rounded-lg text-base" required />
+                  <input {...register("institution")} type="text" className="w-full px-4 py-2 border rounded-lg text-base" />
+                  {errors.institution && <div className="text-red-500 text-sm mt-1">{errors.institution.message}</div>}
                 </div>
               )}
               <h3 className="text-xl md:text-2xl font-bold mb-6 text-center text-[#11372A]">INFORMACIÓN DEL DEBATIENTE 1</h3>
               <div className="mb-6">
                 <label className="block text-gray-700 text-base mb-2">NOMBRE</label>
-                <input type="text" className="w-full px-4 py-2 border rounded-lg text-base" required />
+                <input {...register("debater1Name")} type="text" className="w-full px-4 py-2 border rounded-lg text-base" />
+                {errors.debater1Name && <div className="text-red-500 text-sm mt-1">{errors.debater1Name.message}</div>}
               </div>
               <div className="mb-6">
                 <label className="block text-gray-700 text-base mb-2">CORREO</label>
-                <input type="email" className="w-full px-4 py-2 border rounded-lg text-base" required />
+                <input {...register("debater1Email")} type="email" className="w-full px-4 py-2 border rounded-lg text-base" />
+                {errors.debater1Email && <div className="text-red-500 text-sm mt-1">{errors.debater1Email.message}</div>}
               </div>
               <div className="mb-6">
                 <label className="block text-gray-700 text-base mb-2">PROVINCIA</label>
-                <input type="text" className="w-full px-4 py-2 border rounded-lg text-base" required />
+                <select {...register("debater1Province")} className="w-full px-4 py-2 border rounded-lg text-base">
+                  <option value="">Selecciona una provincia</option>
+                  {provinces.map((province, index) => (
+                    <option key={index} value={province}>{province}</option>
+                  ))}
+                </select>
+                {errors.debater1Province && <div className="text-red-500 text-sm mt-1">{errors.debater1Province.message}</div>}
               </div>
               <div className="mb-6">
                 <label className="block text-gray-700 text-base mb-2">PRONOMBRES (OPCIONAL)</label>
-                <input type="text" className="w-full px-4 py-2 border rounded-lg text-base" />
+                <input {...register("debater1Pronouns")} type="text" className="w-full px-4 py-2 border rounded-lg text-base" />
               </div>
               <h3 className="text-xl md:text-2xl font-bold mb-6 text-center text-[#11372A]">INFORMACIÓN DEL DEBATIENTE 2</h3>
               <div className="mb-6">
                 <label className="block text-gray-700 text-base mb-2">NOMBRE</label>
-                <input type="text" className="w-full px-4 py-2 border rounded-lg text-base" required />
+                <input {...register("debater2Name")} type="text" className="w-full px-4 py-2 border rounded-lg text-base" />
+                {errors.debater2Name && <div className="text-red-500 text-sm mt-1">{errors.debater2Name.message}</div>}
               </div>
               <div className="mb-6">
                 <label className="block text-gray-700 text-base mb-2">CORREO</label>
-                <input type="email" className="w-full px-4 py-2 border rounded-lg text-base" required />
+                <input {...register("debater2Email")} type="email" className="w-full px-4 py-2 border rounded-lg text-base" />
+                {errors.debater2Email && <div className="text-red-500 text-sm mt-1">{errors.debater2Email.message}</div>}
               </div>
               <div className="mb-6">
                 <label className="block text-gray-700 text-base mb-2">PROVINCIA</label>
-                <input type="text" className="w-full px-4 py-2 border rounded-lg text-base" required />
+                <select {...register("debater2Province")} className="w-full px-4 py-2 border rounded-lg text-base">
+                  <option value="">Selecciona una provincia</option>
+                  {provinces.map((province, index) => (
+                    <option key={index} value={province}>{province}</option>
+                  ))}
+                </select>
+                {errors.debater2Province && <div className="text-red-500 text-sm mt-1">{errors.debater2Province.message}</div>}
               </div>
               <div className="mb-6">
                 <label className="block text-gray-700 text-base mb-2">PRONOMBRES (OPCIONAL)</label>
-                <input type="text" className="w-full px-4 py-2 border rounded-lg text-base" />
+                <input {...register("debater2Pronouns")} type="text" className="w-full px-4 py-2 border rounded-lg text-base" />
               </div>
               <div className="flex flex-col md:flex-row md:justify-between md:space-x-4">
                 <button 
@@ -121,8 +182,7 @@ const RegisterDebatient: React.FC = () => {
                   Volver
                 </button>
                 <button 
-                  type="button" 
-                  onClick={handleNextStep} 
+                  type="submit" 
                   className="bg-[#6B9026] text-white px-6 py-2 rounded-full hover:bg-green-800 transition-colors w-full md:w-auto"
                 >
                   Siguiente
@@ -150,6 +210,7 @@ const RegisterDebatient: React.FC = () => {
               </button>
               <button 
                 type="button" 
+                onClick={handleSubmit(handleConfirm)} 
                 className="bg-[#6B9026] text-white px-6 py-2 rounded-full hover:bg-green-800 transition-colors w-full md:w-auto"
               >
                 Confirmar

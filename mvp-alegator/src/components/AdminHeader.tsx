@@ -28,7 +28,7 @@ const AdminHeader: React.FC = () => {
         <img src={logoHeader} alt="Logo" className="h-full w-auto md:h-24" />
       </div>
       <div className="flex items-center space-x-4">
-        <nav className="hidden md:flex space-x-6 lg:space-x-10"> {/* Reducir espacio entre opciones */}
+        <nav className="hidden md:flex space-x-6 lg:space-x-10">
           <Link to="/" className="hover:text-gray-300">INICIO</Link>
           <Link to="/configure-tournament" className="hover:text-gray-300">CONFIGURAR TORNEO</Link>
           <Link to="/register" className="hover:text-gray-300">REGISTRO</Link>
@@ -53,7 +53,7 @@ const AdminHeader: React.FC = () => {
               <img src={logoHeader} alt="Logo" className="h-32 md:h-36 mb-4" />
               <hr className="w-full border-t border-white mb-8" />
             </div>
-            <nav className="flex flex-col items-center space-y-8"> {/* Incrementa el espacio vertical */}
+            <nav className="flex flex-col items-center space-y-8">
               <Link to="/" className="hover:text-gray-300" onClick={toggleSidebar}>INICIO</Link>
               <Link to="/configure-tournament" className="hover:text-gray-300" onClick={toggleSidebar}>CONFIGURAR TORNEO</Link>
               <Link to="/register" className="hover:text-gray-300" onClick={toggleSidebar}>REGISTRO</Link>

@@ -33,6 +33,14 @@ const Tournaments: React.FC = () => {
     }
   };
 
+  const handleSubscribeTournament = () => {
+    navigate('/subscribe-tournament');
+  };
+
+  const handleEditProfile = () => {
+    navigate('/edit-profile');
+  };
+
   useEffect(() => {
     const fetchUser = async () => {
       const userId = (await supabase.auth.getUser()).data?.user?.id;
@@ -51,7 +59,7 @@ const Tournaments: React.FC = () => {
       <div className="min-h-screen flex flex-col mt-20">
         <div className="flex-grow p-4">
           <h1 className="text-5xl font-bold text-center text-[#11372A] mt-8">
-            BIENVENIDO {user?.username?.toUpperCase() ?? 'USERNAME'}
+            ¡BIENVENIDO, {user?.username?.toUpperCase() ?? 'USERNAME'}!
           </h1>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto p-6 lg:p-12">
@@ -65,7 +73,7 @@ const Tournaments: React.FC = () => {
                     <p className="text-sm text-[#11372A]">Código: {user?.short_id?.toUpperCase() ?? 'ID'}</p>
                   </div>
                 </div>
-                <button className="w-full bg-[#11372A] text-white py-3 rounded-full mb-4 hover:bg-green-700 transition-colors">
+                <button className="w-full bg-[#11372A] text-white py-3 rounded-full mb-4 hover:bg-green-700 transition-colors" onClick={handleEditProfile}>
                   Editar cuenta
                 </button>
                 <button className="w-full bg-[#11372A] text-white py-3 rounded-full hover:bg-red-700 transition-colors" onClick={handleLogout}>
@@ -88,11 +96,14 @@ const Tournaments: React.FC = () => {
               <div className="flex items-center justify-between p-4 bg-white rounded-lg shadow">
                 <p className="text-2xl font-semibold text-[#11372A]">Nombre torneo</p>
                 <div className="flex flex-col items-end">
-                  <button className="text-[#11372A] underline py-1 hover:text-green-700 transition-colors">
-                    Registrar Equipo o Orador
+                  <button
+                    className="text-[#11372A] underline py-1 hover:text-green-700 transition-colors"
+                    onClick={handleSubscribeTournament}
+                  >
+                    Registrar Equipo o Juez
                   </button>
                   <button className="text-[#11372A] underline py-1 hover:text-green-700 transition-colors mt-2">
-                    Ir vista de Administrador
+                    Vista de Administrador
                   </button>
                 </div>
               </div>

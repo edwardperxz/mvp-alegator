@@ -15,5 +15,6 @@ export class UserData {
 
 export class UserDashboard {
     username?: string;
+    first_name?: string;
     short_id?: string;
 }
