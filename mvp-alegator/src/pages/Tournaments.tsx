@@ -7,11 +7,33 @@ import { UserDashboard } from '../types/Users';
 import useUsers from '../hooks/useUsers';
 import { supabase } from '../supabaseClient';
 
+interface tournaments {
+  id: string;
+  name: string;
+  shortname: string | null;
+  place: string | null;
+  description_tournament: string | null;
+  tournament_status: string;
+  missing_feedbacks: boolean;
+  feedback_description: string | null;
+  minimum_panel_score: number | null;
+  avoid_same_instituion: boolean;
+  start_date: Date | null;
+  end_date: Date | null;
+  created_at: string;
+  updated_at: string;
+  check_in: boolean;
+  speaker_criteria: any;
+  team_criteria: any;
+  creator: string;
+}
+
 const Tournaments: React.FC = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<UserDashboard>();
   const { fetchUsernameAndShortId } = useUsers();
-
+  const [tournaments, setTournaments] = useState<tournaments[]>([]);
+  
   const handleCreateTournament = () => {
     navigate('/create-tournament');
   };
@@ -43,6 +65,34 @@ const Tournaments: React.FC = () => {
     };
 
     fetchUser();
+  }, []);
+
+  useEffect(() => {
+    const fetchTournaments = async () => {
+      try {
+        const userId = (await supabase.auth.getUser()).data?.user?.id;
+        console.log("usuario id: "+userId)
+        if (!userId) {
+          console.error('No se pudo obtener el ID del usuario');
+          return;
+        }
+
+        const { data, error } = await supabase
+          .from('tournaments') 
+          .select('*') 
+          .eq('creator', userId); 
+
+        if (error) {
+          throw error;
+        }
+
+        setTournaments(data || []);
+      } catch (error) {
+        console.error('Error al obtener torneos:', error);
+      } 
+    };
+
+    fetchTournaments();
   }, []);
 
   return (
@@ -85,8 +135,10 @@ const Tournaments: React.FC = () => {
               <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
                 LISTA DE TUS TORNEOS
               </h2>
-              <div className="flex items-center justify-between p-4 bg-white rounded-lg shadow">
-                <p className="text-2xl font-semibold text-[#11372A]">Nombre torneo</p>
+              {tournaments.length > 0 ? (
+              tournaments.map((tournament) => (
+              <div key={tournament.id} className="flex items-center justify-between p-4 bg-white rounded-lg shadow">
+                <p className="text-2xl font-semibold text-[#11372A]">{tournament.name}</p>
                 <div className="flex flex-col items-end">
                   <button className="text-[#11372A] underline py-1 hover:text-green-700 transition-colors">
                     Registrar Equipo o Orador
@@ -96,6 +148,10 @@ const Tournaments: React.FC = () => {
                   </button>
                 </div>
               </div>
+              ))
+            ) : (
+              <p>No tienes torneos creados.</p>
+            )}
             </div>
 
           </div>
