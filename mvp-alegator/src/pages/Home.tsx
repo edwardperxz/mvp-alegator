@@ -37,7 +37,7 @@ const Home: React.FC = () => {
             <img src={logo} alt="Ivan" className="h-72 md:h-[28rem] lg:h-[32rem] transform -scale-x-100" />
           </div>
           <div className="text-center md:text-left">
-            <h1 className="text-4xl font-bold text-gray-800">¡Bienvenido a Alegator, {user?.username ?? ''}!</h1>
+            <h1 className="text-4xl font-bold text-gray-800">Bienvenido a Alegator {user?.username ?? ''}</h1>
             {!user && (
               <button
                 onClick={handleLogin}
